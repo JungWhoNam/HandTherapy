@@ -1,6 +1,5 @@
 using Leap;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace HandTherapy.Gestures
 {
@@ -8,7 +7,7 @@ namespace HandTherapy.Gestures
     /// Detects a quick, alternating wrist bend cycle.
     /// It starts the sequence immediately upon seeing an initial pose.
     /// </summary>
-    public class AlternateWristBendDetector : MonoBehaviour
+    public class AlternateWristBendDetector : BaseGestureDetector
     {
         private enum Pose { None, L_Up_R_Down, L_Down_R_Up }
         private enum DetectorState { Idle, WaitingForSwitch }
@@ -26,10 +25,6 @@ namespace HandTherapy.Gestures
         [Tooltip("How long you have to complete the switch after the initial pose is detected.")]
         [Range(0.2f, 2.0f)]
         public float switchTimeLimit = 1.5f;
-
-        [Header("Event")]
-        [Tooltip("Fired when a full alternating wrist bend cycle is completed.")]
-        public UnityEvent OnAlternateBendCycleCompleted;
 
         private DetectorState currentState = DetectorState.Idle;
         private Pose confirmedStartPose = Pose.None;
@@ -98,7 +93,7 @@ namespace HandTherapy.Gestures
         private void CompleteCycle()
         {
             Debug.Log("ALTERNATE WRIST BEND CYCLE COMPLETED!");
-            OnAlternateBendCycleCompleted.Invoke();
+            OnGestureDetected.Invoke();
             ResetDetector("Cycle complete");
         }
 

@@ -1,6 +1,5 @@
 using Leap;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace HandTherapy.Gestures
 {
@@ -8,7 +7,7 @@ namespace HandTherapy.Gestures
     /// Detects a clap made by touching the fingertips of both hands together,
     /// ensuring that the palms are facing each other.
     /// </summary>
-    public class FingertipClapDetector : MonoBehaviour
+    public class FingertipClapDetector : BaseGestureDetector
     {
         [Header("Tuning Thresholds")]
         [Tooltip("How close the index fingertips must be to register a clap (in meters).")]
@@ -24,10 +23,6 @@ namespace HandTherapy.Gestures
         [Range(-1.0f, 0.0f)]
         public float orientationThreshold = -0.7f;
 
-        [Header("Event")]
-        [Tooltip("Fired once per detected fingertip clap.")]
-        public UnityEvent OnFingertipClap;
-
         private bool isReadyToClap = true;
 
         void Update()
@@ -41,17 +36,13 @@ namespace HandTherapy.Gestures
                 return;
             }
 
-            // --- Proximity Check ---
             Vector3 leftIndexTip = leftHand.Index.TipPosition;
             Vector3 rightIndexTip = rightHand.Index.TipPosition;
             float distance = Vector3.Distance(leftIndexTip, rightIndexTip);
 
-            // --- Orientation Check ---
             Vector3 leftPalmNormal = leftHand.PalmNormal;
             Vector3 rightPalmNormal = rightHand.PalmNormal;
             float palmOrientationDotProduct = Vector3.Dot(leftPalmNormal, rightPalmNormal);
-
-            // --- Detection Logic ---
 
             // A clap requires the hands to be close AND have the correct orientation.
             bool isClapConditionMet = distance < clapDistanceThreshold &&
@@ -60,7 +51,7 @@ namespace HandTherapy.Gestures
             if (isClapConditionMet && isReadyToClap)
             {
                 Debug.Log("FINGERTIP CLAP DETECTED!");
-                OnFingertipClap.Invoke();
+                OnGestureDetected.Invoke();
                 isReadyToClap = false;
             }
             else if (distance > resetDistanceThreshold)

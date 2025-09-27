@@ -1,6 +1,5 @@
 using Leap;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace HandTherapy.Gestures
 {
@@ -9,7 +8,7 @@ namespace HandTherapy.Gestures
     /// Fires an event once per cycle, and resets only after both hands have opened again.
     /// This version also resets if a hand is lost.
     /// </summary>
-    public class BothHandsClenchDetector : MonoBehaviour
+    public class BothHandsClenchDetector : BaseGestureDetector
     {
         [Header("Tuning Thresholds")]
         [Tooltip("How closed a hand must be to be considered clenched (0=open, 1=closed).")]
@@ -19,10 +18,6 @@ namespace HandTherapy.Gestures
         [Tooltip("How open a hand must be to reset the detector for the next cycle.")]
         [Range(0.0f, 1.0f)]
         public float openThreshold = 0.1f;
-
-        [Header("Event")]
-        [Tooltip("This event is fired once when both hands are clenched simultaneously.")]
-        public UnityEvent OnBothHandsClenched;
 
         // State flag to ensure the event only fires once per clench cycle.
         private bool eventFiredForThisCycle = false;
@@ -62,7 +57,7 @@ namespace HandTherapy.Gestures
             if (areBothHandsClenched)
             {
                 Debug.Log("BOTH HANDS CLENCHED!");
-                OnBothHandsClenched.Invoke();
+                OnGestureDetected.Invoke();
                 eventFiredForThisCycle = true;
             }
         }

@@ -1,13 +1,12 @@
 using Leap;
 using UnityEngine;
-using UnityEngine.Events;
 
 namespace HandTherapy.Gestures
 {
     /// <summary>
     /// Detects when a specified hand forms a fist using the built-in GrabStrength property.
     /// </summary>
-    public class FistDetector : MonoBehaviour
+    public class FistDetector : BaseGestureDetector
     {
         public enum Handedness { Left, Right }
 
@@ -19,10 +18,6 @@ namespace HandTherapy.Gestures
         [Tooltip("How closed does the hand need to be to be considered a fist? (0=open, 1=closed)")]
         [Range(0.0f, 1.0f)]
         public float fistThreshold = 0.9f;
-
-        [Header("Event")]
-        [Tooltip("This event is fired when a fist is detected.")]
-        public UnityEvent OnFistDetected;
 
         private bool isFist = false; // A flag to ensure we only fire the event once
 
@@ -42,7 +37,7 @@ namespace HandTherapy.Gestures
                     {
                         isFist = true;
                         Debug.Log($"FIST DETECTED for {handToTrack} hand!");
-                        OnFistDetected.Invoke();
+                        OnGestureDetected.Invoke();
                     }
                 }
                 else

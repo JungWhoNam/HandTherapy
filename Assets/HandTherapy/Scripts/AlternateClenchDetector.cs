@@ -1,6 +1,5 @@
 using Leap;
 using UnityEngine;
-using UnityEngine.Events;
 using static HandTherapy.Gestures.FistDetector;
 
 namespace HandTherapy.Gestures
@@ -8,7 +7,7 @@ namespace HandTherapy.Gestures
     /// <summary>
     /// Detects an alternating clench-and-open cycle between the left and right hands.
     /// </summary>
-    public class AlternateClenchDetector : MonoBehaviour
+    public class AlternateClenchDetector : BaseGestureDetector
     {
         private enum DetectorState
         {
@@ -30,10 +29,6 @@ namespace HandTherapy.Gestures
         [Tooltip("The max time in seconds allowed between the first hand opening and the second hand clenching.")]
         [Range(0.1f, 2.0f)]
         public float timeWindowBetweenHands = 1.0f;
-
-        [Header("Event")]
-        [Tooltip("Fired when a full Left -> Right or Right -> Left clench cycle is completed.")]
-        public UnityEvent OnAlternateClenchCycleCompleted;
 
         private DetectorState currentState = DetectorState.Idle;
         private Handedness firstHandInSequence;
@@ -94,7 +89,7 @@ namespace HandTherapy.Gestures
                     {
                         // The full sequence is complete!
                         Debug.Log("ALTERNATE CLENCH CYCLE COMPLETED!");
-                        OnAlternateClenchCycleCompleted.Invoke();
+                        OnGestureDetected.Invoke();
                         ResetDetector("Cycle complete");
                     }
                     break;
