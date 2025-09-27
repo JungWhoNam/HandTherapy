@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
 using HandTherapy.Gestures;
+using UnityEngine.Events;
 
 namespace HandTherapy
 {
@@ -32,6 +33,10 @@ namespace HandTherapy
         [Header("Exercise Routine")]
         [Tooltip("Define your sequence of exercises here.")]
         public List<ExerciseStep> exerciseSequence;
+
+        [Header("Events")]
+        [Tooltip("Fired when the entire exercise sequence is completed.")]
+        public UnityEvent OnSequenceCompleted;
 
         private AppState currentState = AppState.Welcome;
         private int currentExerciseIndex = -1;
@@ -98,8 +103,10 @@ namespace HandTherapy
                 // End of the sequence
                 currentState = AppState.Complete;
                 instructionText.text = "모든 운동을 완료했습니다!";
-                progressText.text = "수고하셨습니다.";
+                progressText.text = "수고하셨습니다.\n5초 후 시작 화면으로 돌아갑니다.";
                 Debug.Log("ENTIRE SEQUENCE COMPLETE!");
+
+                OnSequenceCompleted.Invoke();
             }
         }
 
@@ -141,6 +148,28 @@ namespace HandTherapy
                 // Clear the indicator text when the sequence is over or not started
                 progressIndicatorText.text = "";
             }
+        }
+
+        public void ResetSequence()
+        {
+            // Unsubscribe from the current detector
+            if (activeDetector != null)
+            {
+                activeDetector.OnGestureDetected.RemoveListener(OnRepetition);
+            }
+
+            // Reset all state variables
+            currentState = AppState.Welcome; // Or a new 'Idle' state if you prefer
+            currentExerciseIndex = -1;
+            currentRep = 0;
+            activeDetector = null;
+
+            // Clear the UI
+            instructionText.text = "";
+            progressText.text = "";
+            if (progressIndicatorText != null) progressIndicatorText.text = "";
+
+            Debug.Log("Exercise sequence has been reset.");
         }
 
         private void OnDestroy()
