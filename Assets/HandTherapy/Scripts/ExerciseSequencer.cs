@@ -15,6 +15,12 @@ namespace HandTherapy
 
     public class ExerciseSequencer : MonoBehaviour
     {
+        private enum AppState { Welcome, InProgress, Complete }
+
+        [Header("UI Screens")]
+        public GameObject welcomeScreenUI;
+        public GameObject exerciseUI;
+
         [Header("UI Connections")]
         [Tooltip("UI element for the main instruction.")]
         public TextMeshProUGUI instructionText;
@@ -25,12 +31,28 @@ namespace HandTherapy
         [Tooltip("Define your sequence of exercises here.")]
         public List<ExerciseStep> exerciseSequence;
 
+        private AppState currentState = AppState.Welcome;
         private int currentExerciseIndex = -1;
         private int currentRep = 0;
         private BaseGestureDetector activeDetector = null;
 
         void Start()
         {
+            // Start by showing the welcome screen
+            currentState = AppState.Welcome;
+            welcomeScreenUI.SetActive(true);
+            exerciseUI.SetActive(false);
+        }
+
+        // This is called by the AppManager when hands are detected
+        public void StartSequence()
+        {
+            if (currentState != AppState.Welcome) return;
+
+            currentState = AppState.InProgress;
+            welcomeScreenUI.SetActive(false);
+            exerciseUI.SetActive(true);
+
             StartNextExercise();
         }
 
@@ -69,8 +91,9 @@ namespace HandTherapy
             else
             {
                 // End of the sequence
-                instructionText.text = "All exercises complete!";
-                progressText.text = "";
+                currentState = AppState.Complete;
+                instructionText.text = "모든 운동을 완료했습니다!";
+                progressText.text = "수고하셨습니다.";
                 Debug.Log("ENTIRE SEQUENCE COMPLETE!");
             }
         }
@@ -91,7 +114,7 @@ namespace HandTherapy
 
         private void UpdateUI()
         {
-            if (currentExerciseIndex < exerciseSequence.Count)
+            if (currentState == AppState.InProgress && currentExerciseIndex < exerciseSequence.Count)
             {
                 ExerciseStep currentStep = exerciseSequence[currentExerciseIndex];
                 if (instructionText != null) instructionText.text = currentStep.instruction;
