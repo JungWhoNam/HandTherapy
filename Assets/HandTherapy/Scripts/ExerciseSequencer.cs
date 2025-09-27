@@ -26,6 +26,8 @@ namespace HandTherapy
         public TextMeshProUGUI instructionText;
         [Tooltip("UI element for progress (e.g., '5 / 8').")]
         public TextMeshProUGUI progressText;
+        [Tooltip("UI text for the top-right corner, e.g., '운동 1 / 3'.")]
+        public TextMeshProUGUI progressIndicatorText;
 
         [Header("Exercise Routine")]
         [Tooltip("Define your sequence of exercises here.")]
@@ -42,6 +44,8 @@ namespace HandTherapy
             currentState = AppState.Welcome;
             welcomeScreenUI.SetActive(true);
             exerciseUI.SetActive(false);
+            if (progressIndicatorText != null) progressIndicatorText.text = "";
+
         }
 
         // This is called by the AppManager when hands are detected
@@ -65,6 +69,7 @@ namespace HandTherapy
             }
 
             currentExerciseIndex++;
+            UpdateProgressIndicator();
 
             // Check if we have more exercises in the sequence
             if (currentExerciseIndex < exerciseSequence.Count)
@@ -119,6 +124,22 @@ namespace HandTherapy
                 ExerciseStep currentStep = exerciseSequence[currentExerciseIndex];
                 if (instructionText != null) instructionText.text = currentStep.instruction;
                 if (progressText != null) progressText.text = $"{currentRep} / {currentStep.repetitions}";
+            }
+        }
+
+        private void UpdateProgressIndicator()
+        {
+            if (progressIndicatorText == null) return;
+
+            if (currentState == AppState.InProgress && currentExerciseIndex < exerciseSequence.Count)
+            {
+                // Add 1 to the index to show "1 / 3" instead of "0 / 3"
+                progressIndicatorText.text = $"운동 {currentExerciseIndex + 1} / {exerciseSequence.Count}";
+            }
+            else
+            {
+                // Clear the indicator text when the sequence is over or not started
+                progressIndicatorText.text = "";
             }
         }
 
