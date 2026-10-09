@@ -717,6 +717,7 @@ GameObject:
   - component: {fileID: 782633659}
   - component: {fileID: 782633662}
   - component: {fileID: 782633661}
+  - component: {fileID: 782633663}
   m_Layer: 0
   m_Name: Scripts
   m_TagString: Untagged
@@ -812,6 +813,28 @@ MonoBehaviour:
   exerciseSequencer: {fileID: 782633661}
   inactivityResetTime: 5
   completionResetTime: 5
+--- !u!114 &782633663
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 782633657}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9180f765cb042dfb4de35d42b3a8f7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HandTherapy.JsonRoutineLoader
+  routineFilePath: Routines/routine.json
+  gestureBindings:
+  - gestureId: fingertip_clap
+    detector: {fileID: 468920043}
+  - gestureId: both_hands_clench
+    detector: {fileID: 1546198880}
+  - gestureId: alternate_clench
+    detector: {fileID: 2000519678}
+  - gestureId: alternate_wrist_bend
+    detector: {fileID: 1010157941}
 --- !u!1 &799880232
 GameObject:
   m_ObjectHideFlags: 0

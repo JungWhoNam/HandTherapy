@@ -1,0 +1,25 @@
+{
+  "name": "BasicRoutine",
+  "steps": [
+    {
+      "gestureId": "fingertip_clap",
+      "instruction": "양손 손끝으로 박수를 치세요.",
+      "repetitions": 8
+    },
+    {
+      "gestureId": "both_hands_clench",
+      "instruction": "양손을 함께 주먹 쥐었다 펴세요.",
+      "repetitions": 8
+    },
+    {
+      "gestureId": "alternate_clench",
+      "instruction": "한 손씩 차례대로 주먹을 쥐었다 펴세요.",
+      "repetitions": 8
+    },
+    {
+      "gestureId": "alternate_wrist_bend",
+      "instruction": "한 손목은 위로, 다른 손목은 아래로 번갈아 움직이세요.",
+      "repetitions": 8
+    }
+  ]
+}
