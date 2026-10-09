@@ -9,8 +9,14 @@ namespace HandTherapy
     [System.Serializable]
     public class ExerciseStep
     {
+        [Tooltip("Instruction displayed while this exercise step is active.")]
+        [TextArea(2, 4)]
         public string instruction;
+
+        [Tooltip("Number of detected repetitions required to advance to the next step.")]
         [Min(1)] public int repetitions = 8;
+
+        [Tooltip("Gesture detector used to count repetitions for this step.")]
         public BaseGestureDetector detector;
     }
 
@@ -31,7 +37,7 @@ namespace HandTherapy
         public TextMeshProUGUI progressIndicatorText;
 
         [Header("Exercise Routine")]
-        [Tooltip("Define your sequence of exercises here.")]
+        [Tooltip("Steps run from top to bottom. Reorder entries to change the routine.")]
         public List<ExerciseStep> exerciseSequence;
 
         [Header("Events")]
@@ -51,6 +57,53 @@ namespace HandTherapy
             exerciseUI.SetActive(false);
             if (progressIndicatorText != null) progressIndicatorText.text = "";
 
+        }
+
+        [ContextMenu("Validate Exercise Routine")]
+        private void ValidateExerciseRoutine()
+        {
+            if (!TryValidateRoutine(out string error))
+            {
+                Debug.LogError(error, this);
+                return;
+            }
+
+            Debug.Log($"Exercise routine is valid: {exerciseSequence.Count} steps.", this);
+        }
+
+        public bool TryValidateRoutine(out string error)
+        {
+            if (exerciseSequence == null || exerciseSequence.Count == 0)
+            {
+                error = "Exercise routine must contain at least one step.";
+                return false;
+            }
+
+            for (int i = 0; i < exerciseSequence.Count; i++)
+            {
+                ExerciseStep step = exerciseSequence[i];
+
+                if (step == null)
+                {
+                    error = $"Exercise step {i + 1} is missing.";
+                    return false;
+                }
+
+                if (step.repetitions < 1)
+                {
+                    error = $"Exercise step {i + 1} must require at least one repetition.";
+                    return false;
+                }
+
+                if (step.detector == null)
+                {
+                    error = $"Exercise step {i + 1} has no assigned gesture detector.";
+                    return false;
+                }
+            }
+
+            error = null;
+            return true;
         }
 
         // This is called by the AppManager when hands are detected
