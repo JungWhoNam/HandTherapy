@@ -106,5 +106,12 @@ namespace HandTherapy.Gestures
         {
             currentState = DetectorState.Idle;
         }
+
+        public override void ResetDetectionState()
+        {
+            currentState = DetectorState.Idle;
+            firstHandInSequence = default;
+            firstHandOpenedTimestamp = 0f;
+        }
     }
 }

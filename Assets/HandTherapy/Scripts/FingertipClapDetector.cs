@@ -59,5 +59,10 @@ namespace HandTherapy.Gestures
                 isReadyToClap = true;
             }
         }
+
+        public override void ResetDetectionState()
+        {
+            isReadyToClap = true;
+        }
     }
 }

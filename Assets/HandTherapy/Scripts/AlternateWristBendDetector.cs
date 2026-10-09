@@ -102,5 +102,12 @@ namespace HandTherapy.Gestures
             currentState = DetectorState.Idle;
             confirmedStartPose = Pose.None;
         }
+
+        public override void ResetDetectionState()
+        {
+            currentState = DetectorState.Idle;
+            confirmedStartPose = Pose.None;
+            timeSwitchStarted = 0f;
+        }
     }
 }

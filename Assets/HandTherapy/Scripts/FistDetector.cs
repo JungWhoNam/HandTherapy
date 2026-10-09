@@ -52,5 +52,10 @@ namespace HandTherapy.Gestures
                 isFist = false;
             }
         }
+
+        public override void ResetDetectionState()
+        {
+            isFist = false;
+        }
     }
 }

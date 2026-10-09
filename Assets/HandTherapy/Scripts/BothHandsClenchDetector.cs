@@ -61,5 +61,10 @@ namespace HandTherapy.Gestures
                 eventFiredForThisCycle = true;
             }
         }
+
+        public override void ResetDetectionState()
+        {
+            eventFiredForThisCycle = false;
+        }
     }
 }

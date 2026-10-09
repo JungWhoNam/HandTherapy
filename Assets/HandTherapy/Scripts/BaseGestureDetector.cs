@@ -8,5 +8,7 @@ namespace HandTherapy.Gestures
         [Header("Base Event")]
         [Tooltip("This generic event is fired when the specific gesture is detected.")]
         public UnityEvent OnGestureDetected;
+
+        public abstract void ResetDetectionState();
     }
 }
