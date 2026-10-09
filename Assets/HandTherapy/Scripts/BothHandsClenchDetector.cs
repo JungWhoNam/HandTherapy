@@ -57,8 +57,8 @@ namespace HandTherapy.Gestures
             if (areBothHandsClenched)
             {
                 Debug.Log("BOTH HANDS CLENCHED!");
-                OnGestureDetected.Invoke();
                 eventFiredForThisCycle = true;
+                OnGestureDetected.Invoke();
             }
         }
 

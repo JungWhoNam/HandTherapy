@@ -67,11 +67,7 @@ namespace HandTherapy
 
         private void StartNextExercise()
         {
-            // First, unsubscribe from the previous detector to stop listening to it.
-            if (activeDetector != null)
-            {
-                activeDetector.OnGestureDetected.RemoveListener(OnRepetition);
-            }
+            ReleaseActiveDetector();
 
             currentExerciseIndex++;
             UpdateProgressIndicator();
@@ -90,6 +86,7 @@ namespace HandTherapy
                 // Subscribe to the new detector's event
                 if (activeDetector != null)
                 {
+                    activeDetector.ResetDetectionState();
                     activeDetector.OnGestureDetected.AddListener(OnRepetition);
                     Debug.Log($"Starting exercise: {currentStep.instruction}");
                 }
@@ -110,9 +107,26 @@ namespace HandTherapy
             }
         }
 
+        private void ReleaseActiveDetector()
+        {
+            if (activeDetector == null) return;
+
+            activeDetector.OnGestureDetected.RemoveListener(OnRepetition);
+            activeDetector.ResetDetectionState();
+            activeDetector = null;
+        }
+
         // This method is called by the active detector's OnGestureDetected event
         private void OnRepetition()
         {
+            if (currentState != AppState.InProgress ||
+                activeDetector == null ||
+                currentExerciseIndex < 0 ||
+                currentExerciseIndex >= exerciseSequence.Count)
+            {
+                return;
+            }
+
             currentRep++;
             UpdateUI();
 
@@ -152,11 +166,7 @@ namespace HandTherapy
 
         public void ResetSequence()
         {
-            // Unsubscribe from the current detector
-            if (activeDetector != null)
-            {
-                activeDetector.OnGestureDetected.RemoveListener(OnRepetition);
-            }
+            ReleaseActiveDetector();
 
             // Reset all state variables
             currentState = AppState.Welcome; // Or a new 'Idle' state if you prefer
@@ -174,11 +184,7 @@ namespace HandTherapy
 
         private void OnDestroy()
         {
-            // Clean up the listener when the object is destroyed
-            if (activeDetector != null)
-            {
-                activeDetector.OnGestureDetected.RemoveListener(OnRepetition);
-            }
+            ReleaseActiveDetector();
         }
     }
 }

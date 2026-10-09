@@ -51,8 +51,8 @@ namespace HandTherapy.Gestures
             if (isClapConditionMet && isReadyToClap)
             {
                 Debug.Log("FINGERTIP CLAP DETECTED!");
-                OnGestureDetected.Invoke();
                 isReadyToClap = false;
+                OnGestureDetected.Invoke();
             }
             else if (distance > resetDistanceThreshold)
             {

@@ -89,8 +89,8 @@ namespace HandTherapy.Gestures
                     {
                         // The full sequence is complete!
                         Debug.Log("ALTERNATE CLENCH CYCLE COMPLETED!");
-                        OnGestureDetected.Invoke();
                         ResetDetector("Cycle complete");
+                        OnGestureDetected.Invoke();
                     }
                     break;
             }

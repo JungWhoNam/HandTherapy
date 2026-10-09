@@ -93,8 +93,8 @@ namespace HandTherapy.Gestures
         private void CompleteCycle()
         {
             Debug.Log("ALTERNATE WRIST BEND CYCLE COMPLETED!");
-            OnGestureDetected.Invoke();
             ResetDetector("Cycle complete");
+            OnGestureDetected.Invoke();
         }
 
         private void ResetDetector(string reason)
