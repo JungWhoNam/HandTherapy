@@ -23,7 +23,7 @@ namespace HandTherapy.Gestures
         [Range(-1.0f, 0.0f)]
         public float orientationThreshold = -0.7f;
 
-        private bool isReadyToClap = true;
+        private bool isReadyToClap = false;
 
         protected override void EvaluateGesture()
         {
@@ -32,7 +32,7 @@ namespace HandTherapy.Gestures
 
             if (leftHand == null || rightHand == null)
             {
-                isReadyToClap = true;
+                ResetDetectionState();
                 return;
             }
 
@@ -62,7 +62,8 @@ namespace HandTherapy.Gestures
 
         public override void ResetDetectionState()
         {
-            isReadyToClap = true;
+            // Require separated fingertips before accepting another clap.
+            isReadyToClap = false;
         }
     }
 }

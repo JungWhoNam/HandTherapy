@@ -19,43 +19,41 @@ namespace HandTherapy.Gestures
         [Range(0.0f, 1.0f)]
         public float fistThreshold = 0.9f;
 
-        private bool isFist = false; // A flag to ensure we only fire the event once
+        [Tooltip("How open the hand must be before another fist can be counted.")]
+        [Range(0.0f, 1.0f)]
+        public float openThreshold = 0.1f;
+
+        private bool isReadyToClench = false;
 
         protected override void EvaluateGesture()
         {
-            Hand hand = (handToTrack == Handedness.Left)
+            Hand hand = handToTrack == Handedness.Left
                 ? HandDataManager.Instance.LeftHand
                 : HandDataManager.Instance.RightHand;
 
-            if (hand != null)
+            if (hand == null)
             {
-                // Check if the hand's GrabStrength is above our threshold
-                if (hand.GrabStrength >= fistThreshold)
-                {
-                    // If this is the first frame we've detected a fist, fire the event
-                    if (!isFist)
-                    {
-                        isFist = true;
-                        Debug.Log($"FIST DETECTED for {handToTrack} hand!");
-                        RaiseGestureDetected();
-                    }
-                }
-                else
-                {
-                    // If the hand is no longer a fist, reset our flag
-                    isFist = false;
-                }
+                ResetDetectionState();
+                return;
             }
-            else
+
+            if (hand.GrabStrength < openThreshold)
             {
-                // If the hand is lost, reset the flag
-                isFist = false;
+                isReadyToClench = true;
+                return;
+            }
+
+            if (hand.GrabStrength >= fistThreshold && isReadyToClench)
+            {
+                isReadyToClench = false;
+                Debug.Log($"FIST DETECTED for {handToTrack} hand!");
+                RaiseGestureDetected();
             }
         }
 
         public override void ResetDetectionState()
         {
-            isFist = false;
+            isReadyToClench = false;
         }
     }
 }
