@@ -3,6 +3,7 @@ using UnityEngine;
 using TMPro;
 using HandTherapy.Gestures;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 namespace HandTherapy
 {
@@ -12,6 +13,9 @@ namespace HandTherapy
         [Tooltip("Instruction displayed while this exercise step is active.")]
         [TextArea(2, 4)]
         public string instruction;
+
+        [Tooltip("Optional illustration displayed with the instruction for this step.")]
+        public Sprite illustration;
 
         [Tooltip("Number of detected repetitions required to advance to the next step.")]
         [Min(1)] public int repetitions = 8;
@@ -31,6 +35,8 @@ namespace HandTherapy
         [Header("UI Connections")]
         [Tooltip("UI element for the main instruction.")]
         public TextMeshProUGUI instructionText;
+        [Tooltip("Optional UI Image used to display the current exercise illustration.")]
+        public Image instructionImage;
         [Tooltip("UI element for progress (e.g., '5 / 8').")]
         public TextMeshProUGUI progressText;
         [Tooltip("UI text for the top-right corner, e.g., '운동 1 / 3'.")]
@@ -51,6 +57,7 @@ namespace HandTherapy
 
         void Start()
         {
+            UpdateInstructionImage(null);
             // Start by showing the welcome screen
             currentState = AppState.Welcome;
             welcomeScreenUI.SetActive(true);
@@ -152,6 +159,7 @@ namespace HandTherapy
             {
                 // End of the sequence
                 currentState = AppState.Complete;
+                UpdateInstructionImage(null);
                 instructionText.text = "모든 운동을 완료했습니다!";
                 progressText.text = "수고하셨습니다.\n5초 후 시작 화면으로 돌아갑니다.";
                 Debug.Log("ENTIRE SEQUENCE COMPLETE!");
@@ -198,8 +206,18 @@ namespace HandTherapy
             {
                 ExerciseStep currentStep = exerciseSequence[currentExerciseIndex];
                 if (instructionText != null) instructionText.text = currentStep.instruction;
+                UpdateInstructionImage(currentStep.illustration);
                 if (progressText != null) progressText.text = $"{currentRep} / {currentStep.repetitions}";
             }
+        }
+
+        private void UpdateInstructionImage(Sprite illustration)
+        {
+            if (instructionImage == null) return;
+
+            instructionImage.sprite = illustration;
+            instructionImage.preserveAspect = true;
+            instructionImage.enabled = illustration != null;
         }
 
         private void UpdateProgressIndicator()
@@ -229,6 +247,7 @@ namespace HandTherapy
             activeDetector = null;
 
             // Clear the UI
+            UpdateInstructionImage(null);
             instructionText.text = "";
             progressText.text = "";
             if (progressIndicatorText != null) progressIndicatorText.text = "";
