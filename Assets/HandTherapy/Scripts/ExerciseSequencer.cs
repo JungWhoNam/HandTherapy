@@ -86,8 +86,8 @@ namespace HandTherapy
                 // Subscribe to the new detector's event
                 if (activeDetector != null)
                 {
-                    activeDetector.ResetDetectionState();
                     activeDetector.OnGestureDetected.AddListener(OnRepetition);
+                    activeDetector.BeginDetection();
                     Debug.Log($"Starting exercise: {currentStep.instruction}");
                 }
                 else
@@ -112,7 +112,7 @@ namespace HandTherapy
             if (activeDetector == null) return;
 
             activeDetector.OnGestureDetected.RemoveListener(OnRepetition);
-            activeDetector.ResetDetectionState();
+            activeDetector.EndDetection();
             activeDetector = null;
         }
 
@@ -121,6 +121,7 @@ namespace HandTherapy
         {
             if (currentState != AppState.InProgress ||
                 activeDetector == null ||
+                !activeDetector.IsDetecting ||
                 currentExerciseIndex < 0 ||
                 currentExerciseIndex >= exerciseSequence.Count)
             {

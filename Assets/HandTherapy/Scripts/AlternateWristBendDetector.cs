@@ -30,7 +30,7 @@ namespace HandTherapy.Gestures
         private Pose confirmedStartPose = Pose.None;
         private float timeSwitchStarted = 0f;
 
-        void Update()
+        protected override void EvaluateGesture()
         {
             Hand leftHand = HandDataManager.Instance.LeftHand;
             Hand rightHand = HandDataManager.Instance.RightHand;
@@ -94,7 +94,7 @@ namespace HandTherapy.Gestures
         {
             Debug.Log("ALTERNATE WRIST BEND CYCLE COMPLETED!");
             ResetDetector("Cycle complete");
-            OnGestureDetected.Invoke();
+            RaiseGestureDetected();
         }
 
         private void ResetDetector(string reason)

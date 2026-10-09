@@ -25,7 +25,7 @@ namespace HandTherapy.Gestures
 
         private bool isReadyToClap = true;
 
-        void Update()
+        protected override void EvaluateGesture()
         {
             Hand leftHand = HandDataManager.Instance.LeftHand;
             Hand rightHand = HandDataManager.Instance.RightHand;
@@ -52,7 +52,7 @@ namespace HandTherapy.Gestures
             {
                 Debug.Log("FINGERTIP CLAP DETECTED!");
                 isReadyToClap = false;
-                OnGestureDetected.Invoke();
+                RaiseGestureDetected();
             }
             else if (distance > resetDistanceThreshold)
             {

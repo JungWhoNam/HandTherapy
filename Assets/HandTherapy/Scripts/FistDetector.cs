@@ -21,7 +21,7 @@ namespace HandTherapy.Gestures
 
         private bool isFist = false; // A flag to ensure we only fire the event once
 
-        void Update()
+        protected override void EvaluateGesture()
         {
             Hand hand = (handToTrack == Handedness.Left)
                 ? HandDataManager.Instance.LeftHand
@@ -37,7 +37,7 @@ namespace HandTherapy.Gestures
                     {
                         isFist = true;
                         Debug.Log($"FIST DETECTED for {handToTrack} hand!");
-                        OnGestureDetected.Invoke();
+                        RaiseGestureDetected();
                     }
                 }
                 else

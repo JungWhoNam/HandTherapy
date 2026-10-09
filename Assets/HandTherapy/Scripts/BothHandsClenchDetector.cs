@@ -22,7 +22,7 @@ namespace HandTherapy.Gestures
         // State flag to ensure the event only fires once per clench cycle.
         private bool eventFiredForThisCycle = false;
 
-        void Update()
+        protected override void EvaluateGesture()
         {
             Hand leftHand = HandDataManager.Instance.LeftHand;
             Hand rightHand = HandDataManager.Instance.RightHand;
@@ -58,7 +58,7 @@ namespace HandTherapy.Gestures
             {
                 Debug.Log("BOTH HANDS CLENCHED!");
                 eventFiredForThisCycle = true;
-                OnGestureDetected.Invoke();
+                RaiseGestureDetected();
             }
         }
 

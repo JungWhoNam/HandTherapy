@@ -34,7 +34,7 @@ namespace HandTherapy.Gestures
         private Handedness firstHandInSequence;
         private float firstHandOpenedTimestamp;
 
-        void Update()
+        protected override void EvaluateGesture()
         {
             Hand leftHand = HandDataManager.Instance.LeftHand;
             Hand rightHand = HandDataManager.Instance.RightHand;
@@ -90,7 +90,7 @@ namespace HandTherapy.Gestures
                         // The full sequence is complete!
                         Debug.Log("ALTERNATE CLENCH CYCLE COMPLETED!");
                         ResetDetector("Cycle complete");
-                        OnGestureDetected.Invoke();
+                        RaiseGestureDetected();
                     }
                     break;
             }
